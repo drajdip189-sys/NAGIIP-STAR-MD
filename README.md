@@ -54,10 +54,10 @@ src="https://files.catbox.moe/9n8gjp.jpg">
     <strong>CONTACT ME</strong>
   <br>
     <a href="https://t.me/nagiip_ztar">
-    <img src="https://img.shields.io/badge/Join%20Telegram-0078E7?style=for-the-badge&logo=telegram&logoColor=white" alt="Join Telegram"/>
+    <img src="https://img.shields.io/badge/Telegram-0078E7?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram"/>
   </a>
   <a href="https://wa.link/umb31t">
-    <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="Join WhatsApp"/>
+    <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" alt="WhatsApp"/>
   </a>
 </p>
 
