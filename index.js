@@ -247,7 +247,7 @@ async function startXeonBotInc() {
 ┗❐═⭔════════⭔═❐
 
 ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ʙᴇʟᴏᴡ
-https://chat.whatsapp.com/GkrQAbeBTi0JEHh7BiYgFo?mode=wwt`,
+https://chat.whatsapp.com/HfI1UG8hvgOBKeMXwtj1cR?mode=wwt`,
                 });
 
             await delay(1999)
