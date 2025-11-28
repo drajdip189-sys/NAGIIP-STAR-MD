@@ -201,7 +201,7 @@ async function startXeonBotInc() {
         if (!!global.phoneNumber) {
             phoneNumber = global.phoneNumber
         } else {
-            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Enter your Knight Bot Session ID in \nsession/creds.json  `)))
+            phoneNumber = await question(chalk.bgBlack(chalk.greenBright(`Please type your WhatsApp number 😍\nFormat: 252638697036 (without + or spaces) : `)))
         }
 
         // Clean the phone number - remove any non-digit characters
