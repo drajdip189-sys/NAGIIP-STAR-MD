@@ -94,7 +94,7 @@ src="https://files.catbox.moe/9n8gjp.jpg">
 </p>
 
 <p align="center">
-    <strong>THIS BOT IS COME FROM KNIGHT BOT MD SO IT'S 100% NOT ENCRYPTED — YOU CAN CHANGE ANYTHING</strong>
+    <strong>NAGIIP-STAR MD 🚀 NEXT GENERATION WHATSAPP BOT</strong>
 </p>
 
 ---
