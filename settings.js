@@ -1,6 +1,6 @@
 const settings = {
   packname: 'Nagiip Star MD',
-  author: '‎',
+  author: 'Nagiip Star',
   botName: "NAGIIP STAR MD",
   botOwner: 'Nagiip Star', // Your name
   ownerNumber: '252638697036', //Set your number here without + symbol, just add country code & number without any space
