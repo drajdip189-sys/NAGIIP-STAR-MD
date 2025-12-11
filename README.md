@@ -94,7 +94,7 @@ src="https://files.catbox.moe/9n8gjp.jpg">
 </p>
 
 <p align="center">
-    <strong>GUYS THE BOT RESPONDING SOMETIMES SO IF YOU CAN FUX THIS ERROR PLEASE CONTACT ME</strong>
+    <strong>GUYS THE BOT IS NOT RESPONDING SOMETIMES SO IF YOU CAN FUX THIS ERROR PLEASE CONTACT ME</strong>
 </p>
 
 ---
