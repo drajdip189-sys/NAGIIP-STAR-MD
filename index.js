@@ -301,6 +301,10 @@ async function startBot() {
     const settings = require('./settings');
     setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000);
 
+    // Import message queue for offline handling
+    const MessageQueue = require('./lib/messageQueue');
+    const messageQueue = new MessageQueue();
+
     // Memory optimization - Force garbage collection if available
     setInterval(() => {
         if (global.gc) {
@@ -395,6 +399,27 @@ async function startBot() {
         // Apply font transformer to all bot responses
         const { wrapSendMessage } = require('./lib/fontTransformer');
         wrapSendMessage(XeonBotInc);
+
+        // Store original sendMessage before wrapping
+        const originalSendMessage = XeonBotInc.sendMessage;
+        const baseSendMessage = originalSendMessage;
+        let hasConnectedOnce = false;
+
+        // Wrap sendMessage to use queue on failure (but not for connection message)
+        XeonBotInc.sendMessage = async function(jid, content, options = {}) {
+            try {
+                return await originalSendMessage.call(this, jid, content, options);
+            } catch (error) {
+                console.log(`⚠️ Message send failed, queueing for retry: ${error.message}`);
+                messageQueue.addMessage(jid, content, 1);
+                throw error;
+            }
+        };
+
+        // sendMessageDirect - bypasses queue (for connection message)
+        XeonBotInc.sendMessageDirect = async function(jid, content, options = {}) {
+            return await baseSendMessage.call(this, jid, content, options);
+        };
 
         // Message handling
         XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
@@ -508,11 +533,17 @@ async function startBot() {
                 console.log(chalk.magenta(` `));
                 console.log(chalk.yellow(`🍁CONNECTED TO => ` + JSON.stringify(XeonBotInc.user, null, 2)));
 
+                // Mark as connected and process queued messages
+                messageQueue.setConnected(true);
+                await messageQueue.processQueue(XeonBotInc);
+
                 const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
                 
-                // Improved WhatsApp connection message
-                await XeonBotInc.sendMessage(botNumber, {
-                    text: `
+                // Send connection message only on first connect (bypasses queue)
+                if (!hasConnectedOnce) {
+                    hasConnectedOnce = true;
+                    await XeonBotInc.sendMessageDirect(botNumber, {
+                        text: `
 ┏❐═⭔ *CONNECTED SUCCESSFULLY* ⭔═❐
 ┃⭔ *Bot:* NAGIIP STAR MD 
 ┃⭔ *Time:* ${new Date().toLocaleString()}
@@ -522,7 +553,11 @@ async function startBot() {
 
 ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴛʜᴇ ɢʀᴏᴜᴘ ʙᴇʟᴏᴡ
 https://chat.whatsapp.com/Iwz5WfqtgGhHYlI5sZyfFK?mode=wwt`,
-                    });
+                    }).catch(err => console.log('⚠️ Could not send connection message:', err.message));
+                }
+
+                // Process queued messages periodically when connected
+                setInterval(() => messageQueue.processQueue(XeonBotInc), 10000);
 
                 await delay(1999);
                 
@@ -545,6 +580,8 @@ https://chat.whatsapp.com/Iwz5WfqtgGhHYlI5sZyfFK?mode=wwt`,
                 console.log(chalk.blue(`${global.themeemoji || '•'} All systems operational!`));
             }
             if (connection === 'close') {
+                messageQueue.setConnected(false);
+                console.log(chalk.yellow('⚠️ Connection lost - messages will be queued for retry'));
                 const statusCode = lastDisconnect?.error?.output?.statusCode;
                 if (statusCode === DisconnectReason.loggedOut || statusCode === 401) {
                     try {
@@ -553,6 +590,7 @@ https://chat.whatsapp.com/Iwz5WfqtgGhHYlI5sZyfFK?mode=wwt`,
                     console.log(chalk.red('Session logged out. Please re-authenticate.'));
                     startXeonBotInc();
                 } else {
+                    console.log(chalk.yellow('Reconnecting...'));
                     startXeonBotInc();
                 }
             }
